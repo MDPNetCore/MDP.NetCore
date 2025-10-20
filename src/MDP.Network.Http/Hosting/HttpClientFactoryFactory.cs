@@ -61,7 +61,7 @@ namespace MDP.Network.Http
                 httpClientBuilder = httpClientBuilder.ConfigurePrimaryHttpMessageHandler(serviceProvider =>
                 {
                     // Create
-                    var httpClientHandler = new System.Net.Http.HttpClientHandler();
+                    var httpClientHandler = new System.Net.Http.SocketsHttpHandler();
                     {
                         // UseCookies
                         httpClientHandler.UseCookies = setting.Value.UseCookies;
@@ -69,7 +69,7 @@ namespace MDP.Network.Http
                         // IgnoreCertificates
                         if (setting.Value.IgnoreServerCertificate == true)
                         {
-                            httpClientHandler.ServerCertificateCustomValidationCallback = System.Net.Http.HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+                            httpClientHandler.SslOptions.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return false; };
                         }
                     }
 
