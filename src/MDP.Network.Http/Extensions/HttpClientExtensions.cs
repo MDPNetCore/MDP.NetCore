@@ -1,15 +1,9 @@
-﻿using MDP.Network.Http;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using static MDP.Network.Http.HttpClientFactoryFactory;
 
 namespace System.Net.Http
 {
@@ -61,17 +55,17 @@ namespace System.Net.Http
                 // IsSuccess
                 if (responseMessage.IsSuccessStatusCode == true)
                 {
-                    // ResultModel
-                    var resultModel = await CreateResponseModel(responseMessage, resultFactory);
-                    if (resultModel == null) throw new InvalidOperationException($"{nameof(resultModel)}=null");
+                    // ResponseModel
+                    var responseModel = await CreateResultModel(responseMessage, resultFactory);
+                    if (responseModel == null) throw new InvalidOperationException($"{nameof(responseModel)}=null");
 
                     // Return
-                    return resultModel;
+                    return responseModel;
                 }
                 else
                 {
                     // ErrorModel
-                    var errorModel = await CreateResponseModel(responseMessage, errorFactory);
+                    var errorModel = await CreateResultModel(responseMessage, errorFactory);
                     if (errorModel == null) responseMessage.EnsureSuccessStatusCode();
 
                     // Throw
@@ -180,8 +174,8 @@ namespace System.Net.Http
             }
         }
 
-        private static async Task<TResponseModel> CreateResponseModel<TResponseModel>(HttpResponseMessage responseMessage, Func<JsonElement, TResponseModel> responseModelFactory = null)
-               where TResponseModel : class
+        private static async Task<TResultModel> CreateResultModel<TResultModel>(HttpResponseMessage responseMessage, Func<JsonElement, TResultModel> resultModelFactory = null)
+               where TResultModel : class
         {
             #region Contracts
 
@@ -189,53 +183,53 @@ namespace System.Net.Http
 
             #endregion
 
-            // ResponseModelString
-            var responseModelString = await responseMessage.Content.ReadAsStringAsync();
+            // ResultModelString
+            var resultModelString = await responseMessage.Content.ReadAsStringAsync();
 
-            // ResponseModel by Factory
-            if (responseModelFactory != null)
+            // ResultModel by Factory
+            if (resultModelFactory != null)
             {
                 // Require
-                if (string.IsNullOrEmpty(responseModelString) == true) responseModelString = "{}";
+                if (string.IsNullOrEmpty(resultModelString) == true) resultModelString = "{}";
 
                 // Document
-                var responseModelDocument = JsonDocument.Parse(responseModelString);
-                if (responseModelDocument == null) throw new InvalidOperationException($"{nameof(responseModelDocument)}=null");
+                var resultModelDocument = JsonDocument.Parse(resultModelString);
+                if (resultModelDocument == null) throw new InvalidOperationException($"{nameof(resultModelDocument)}=null");
 
                 // Factory
-                using (responseModelDocument)
+                using (resultModelDocument)
                 {
-                    // ResponseModel
-                    var responseModel = responseModelFactory.Invoke(responseModelDocument.RootElement);
+                    // ResultModel
+                    var resultModel = resultModelFactory.Invoke(resultModelDocument.RootElement);
 
                     // Return
-                    return responseModel;
+                    return resultModel;
                 }
             }
 
-            // ResponseModel by String
-            if (typeof(TResponseModel) == typeof(string))
+            // ResultModel by String
+            if (typeof(TResultModel) == typeof(string))
             {
                 // Require
-                if (string.IsNullOrEmpty(responseModelString) == true) responseModelString = string.Empty;
+                if (string.IsNullOrEmpty(resultModelString) == true) resultModelString = string.Empty;
 
-                // ResponseModel
-                var responseModel = responseModelString as TResponseModel;
+                // ResultModel
+                var resultModel = resultModelString as TResultModel;
 
                 // Return
-                return responseModel;
+                return resultModel;
             }
 
-            // ResponseModel by Deserialize
+            // ResultModel by Deserialize
             {
                 // Require
-                if (string.IsNullOrEmpty(responseModelString) == true) responseModelString = "{}";
+                if (string.IsNullOrEmpty(resultModelString) == true) resultModelString = "{}";
 
-                // ResponseModel
-                var responseModel = System.Text.Json.JsonSerializer.Deserialize<TResponseModel>(responseModelString, _serializerOptions);
+                // ResultModel
+                var resultModel = System.Text.Json.JsonSerializer.Deserialize<TResultModel>(resultModelString, _serializerOptions);
 
                 // Return
-                return responseModel;
+                return resultModel;
             }
         }
     }

@@ -2,8 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Net.Http;
+using System.Reflection.PortableExecutable;
 
 namespace MDP.Network.Http
 {
@@ -36,46 +35,15 @@ namespace MDP.Network.Http
                 if (setting.Value.Headers == null) setting.Value.Headers = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
                 // HttpClientBuilder
-                var httpClientBuilder = serviceCollection.AddHttpClient(setting.Key, httpClient =>
-                {
-                    // BaseAddress
-                    var baseAddress = setting.Value.BaseAddress;
-                    if (string.IsNullOrEmpty(baseAddress) == false)
-                    {
-                        // EndsWith
-                        if (baseAddress.EndsWith(@"/") == false) baseAddress += @"/";
-
-                        // Set
-                        httpClient.BaseAddress = new Uri(baseAddress);
-                    }
-
-                    // Headers
-                    foreach (var header in setting.Value.Headers)
-                    {
-                        // Add
-                        httpClient.DefaultRequestHeaders.Add(header.Key, header.Value);
-                    }
-                });
-
-                // System.Net.Http.HttpClientHandler
-                httpClientBuilder = httpClientBuilder.ConfigurePrimaryHttpMessageHandler(serviceProvider =>
-                {
-                    // Create
-                    var httpClientHandler = new System.Net.Http.SocketsHttpHandler();
-                    {
-                        // UseCookies
-                        httpClientHandler.UseCookies = setting.Value.UseCookies;
-
-                        // IgnoreCertificates
-                        if (setting.Value.IgnoreServerCertificate == true)
-                        {
-                            httpClientHandler.SslOptions.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return false; };
-                        }
-                    }
-
-                    // Return
-                    return httpClientHandler;
-                });
+                var httpClientBuilder = serviceCollection.AddHttpClient(
+                    name: setting.Key,
+                    baseAddress: setting.Value.BaseAddress,
+                    headers: setting.Value.Headers,
+                    handlers: null,
+                    useCookies: setting.Value.UseCookies,
+                    ignoreServerCertificate: setting.Value.IgnoreServerCertificate
+                );
+                if (httpClientBuilder == null) throw new InvalidOperationException($"{nameof(httpClientBuilder)}=null");
 
                 // MDP.Network.Http.HttpClientHandler
                 httpClientBuilder = httpClientBuilder.ConfigureAdditionalHttpMessageHandlers((httpMessageHandlerList, serviceProvider) =>
