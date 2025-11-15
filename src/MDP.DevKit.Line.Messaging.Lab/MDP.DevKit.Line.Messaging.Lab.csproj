@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <!-- Reference -->
+  <ItemGroup>
+    <ProjectReference Include="..\MDP.NetCore\MDP.NetCore.csproj" />
+    <ProjectReference Include="..\MDP.DevKit.Line.Messaging\MDP.DevKit.Line.Messaging.csproj" />
+  </ItemGroup>
+
+  <!-- Config -->
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

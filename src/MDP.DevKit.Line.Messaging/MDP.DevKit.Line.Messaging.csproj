@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <!-- Reference -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MDP.Reflection\MDP.Reflection.csproj" />
+    <ProjectReference Include="..\MDP.Registration\MDP.Registration.csproj" />
+    <ProjectReference Include="..\MDP.Text.Json\MDP.Text.Json.csproj" />
+  </ItemGroup>
+
+  <!-- Package -->
+  <PropertyGroup>
+    <authors>CLK Software Studio</authors>
+    <copyright>Copyright © 2014 CLK Software Studio</copyright>
+    <description>MDPCore Library</description>
+    <PackageIcon>Package.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Clark159/MDP.Net</PackageProjectUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\Package.png" Pack="true" PackagePath="\Package.png" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="\README.md" />
+  </ItemGroup>
+</Project>
