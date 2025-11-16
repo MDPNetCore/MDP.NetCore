@@ -15,6 +15,7 @@
     <ProjectReference Include="..\MDP.Reflection\MDP.Reflection.csproj" />
     <ProjectReference Include="..\MDP.Registration\MDP.Registration.csproj" />
     <ProjectReference Include="..\MDP.Text.Json\MDP.Text.Json.csproj" />
+    <ProjectReference Include="..\MDP.Network.Http\MDP.Network.Http.csproj" />
   </ItemGroup>
 
   <!-- Package -->

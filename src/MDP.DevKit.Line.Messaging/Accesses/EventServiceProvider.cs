@@ -1,20 +1,24 @@
 ﻿using MDP.Text.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
-namespace MDP.DevKit.LineMessaging
+namespace MDP.DevKit.Line.Messaging
 {
-    public class HookServiceProvider : HookService
+    public class EventServiceProvider : EventService
     {
         // Fields
         private readonly string _channelSecret = string.Empty;
 
 
         // Constructors
-        public HookServiceProvider(string channelSecret)
+        public EventServiceProvider(string channelSecret)
         {
             #region Contracts
 
@@ -32,16 +36,16 @@ namespace MDP.DevKit.LineMessaging
         {
             #region Contracts
 
-            ArgumentNullException.ThrowIfNullOrEmpty(content);
-            ArgumentNullException.ThrowIfNullOrEmpty(signature);
+            if (string.IsNullOrEmpty(content) == true) throw new ArgumentException($"{nameof(content)}=null");
+            if (string.IsNullOrEmpty(signature) == true) throw new ArgumentException($"{nameof(signature)}=null");
 
             #endregion
 
             // Require
-            if(this.ValidateSignature(content, signature) == false) return new List<Event>();
+            if(this.Validate(content, signature) == false) return new List<Event>();
 
             // EventList
-            List<Event> eventList = new List<Event>();
+            var eventList = new List<Event>();
             {
                 // ContentDocument
                 using (var contentDocument = JsonDocument.Parse(content))
@@ -61,6 +65,27 @@ namespace MDP.DevKit.LineMessaging
 
             // Return
             return eventList;
+        }
+
+        private bool Validate(string content, string signature)
+        {
+            #region Contracts
+
+            if (string.IsNullOrEmpty(content) == true) throw new ArgumentException($"{nameof(content)}=null");
+            if (string.IsNullOrEmpty(signature) == true) throw new ArgumentException($"{nameof(signature)}=null");
+
+            #endregion
+
+            // Validate
+            byte[] contentBytes = Encoding.UTF8.GetBytes(content);
+            byte[] channelSecretBytes = Encoding.UTF8.GetBytes(_channelSecret);
+            if (Convert.ToBase64String(new HMACSHA256(channelSecretBytes).ComputeHash(contentBytes)) != signature)
+            {
+                return false;
+            }
+
+            // Return
+            return true;
         }
 
         private Event CreateEvent(JsonElement eventElement)
@@ -298,7 +323,7 @@ namespace MDP.DevKit.LineMessaging
                     var externalContentProvider = new ExternalContentProvider();
                     {
                         externalContentProvider.OriginalContentUrl = contentProviderElement.GetProperty<string>("originalContentUrl") ?? throw new InvalidOperationException($"{nameof(externalContentProvider.OriginalContentUrl)}=null");
-                        externalContentProvider.PreviewContentUrl = contentProviderElement.GetProperty<string>("previewImageUrl") ?? throw new InvalidOperationException($"{nameof(externalContentProvider.PreviewContentUrl)}=null");
+                        externalContentProvider.PreviewImageUrl = contentProviderElement.GetProperty<string>("previewImageUrl") ?? throw new InvalidOperationException($"{nameof(externalContentProvider.PreviewImageUrl)}=null");
                     }
                     contentProvider = externalContentProvider;
                     break;
@@ -328,28 +353,6 @@ namespace MDP.DevKit.LineMessaging
 
             // Return
             return channelMode.Value;
-        }
-
-
-        private bool ValidateSignature(string content, string signature)
-        {
-            #region Contracts
-
-            if (string.IsNullOrEmpty(content) == true) throw new ArgumentException($"{nameof(content)}=null");
-            if (string.IsNullOrEmpty(signature) == true) throw new ArgumentException($"{nameof(signature)}=null");
-
-            #endregion
-
-            // Validate
-            byte[] contentBytes = Encoding.UTF8.GetBytes(content);
-            byte[] channelSecretBytes = Encoding.UTF8.GetBytes(_channelSecret);
-            if (Convert.ToBase64String(new HMACSHA256(channelSecretBytes).ComputeHash(contentBytes)) != signature)
-            {
-                return false;
-            }
-
-            // Return
-            return true;
         }
     }
 }

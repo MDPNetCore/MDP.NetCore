@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MDP.DevKit.LineMessaging
+namespace MDP.DevKit.Line.Messaging
 {
-    public interface HookService
+    public interface EventService
     {
         // Methods
         List<Event> Handle(string content, string signature);

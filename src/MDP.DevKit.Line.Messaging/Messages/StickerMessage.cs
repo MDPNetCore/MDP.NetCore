@@ -6,21 +6,19 @@ using System.Threading.Tasks;
 
 namespace MDP.DevKit.Line.Messaging
 {
-    public class StickerMessageEvent : MessageEvent
+    public class StickerMessage : Message
     {
         // Constants
         public const string DefaultMessageType = "sticker";
 
 
         // Constructors
-        public StickerMessageEvent() : base(DefaultMessageType) { }
+        public StickerMessage() : base(DefaultMessageType) { }
 
 
         // Properties
-        public string StickerResourceType { get; set; }
+        public int PackageId { get; set; } = 1;
 
-        public string PackageId { get; set; }
-
-        public string StickerId { get; set; } 
+        public int StickerId { get; set; } = 1;
     }
 }

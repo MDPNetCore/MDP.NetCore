@@ -66,7 +66,7 @@ MDP.NetCore是開源的.NET開發平台，協助開發人員快速建立Console�
 
 ### MDP.NetCore 6.1.4
 
-- MDP.DevKit.LineMessaging：遷移此模組，遷移至獨立Repo進行維護。
+- MDP.DevKit.Line.Messaging：遷移此模組，遷移至獨立Repo進行維護。
 
 ### MDP.NetCore 6.1.2
 

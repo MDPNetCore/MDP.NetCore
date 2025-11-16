@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace MDP.DevKit.Line.Messaging
 {
-    public class AudioMessageEvent : MessageEvent
+    public class AudioMessage : Message
     {
         // Constants
         public const string DefaultMessageType = "audio";
 
 
         // Constructors
-        public AudioMessageEvent() : base(DefaultMessageType) { }
+        public AudioMessage() : base(DefaultMessageType) { }
 
 
         // Properties
-        public ContentProvider ContentProvider { get; set; } = null;
+        public string OriginalContentUrl { get; set; } = string.Empty;
 
-        public int Duration { get; set; } = default(int);
+        public int Duration { get; set; } = 0; // Milliseconds
     }
 }

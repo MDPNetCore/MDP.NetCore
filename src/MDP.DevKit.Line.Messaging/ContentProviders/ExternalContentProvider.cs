@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MDP.DevKit.LineMessaging
+namespace MDP.DevKit.Line.Messaging
 {
     public class ExternalContentProvider : ContentProvider
     {
@@ -19,6 +19,6 @@ namespace MDP.DevKit.LineMessaging
         // Properties
         public string OriginalContentUrl { get; set; } = string.Empty;
 
-        public string PreviewContentUrl { get; set; } = string.Empty;
+        public string PreviewImageUrl { get; set; } = string.Empty;
     }
 }

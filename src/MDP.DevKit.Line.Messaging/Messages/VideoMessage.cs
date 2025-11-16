@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace MDP.DevKit.Line.Messaging
 {
-    public class VideoMessageEvent : MessageEvent
+    public class VideoMessage : Message
     {
         // Constants
         public const string DefaultMessageType = "video";
 
 
         // Constructors
-        public VideoMessageEvent() : base(DefaultMessageType) { }
+        public VideoMessage() : base(DefaultMessageType) { }
 
 
         // Properties
-        public ContentProvider ContentProvider { get; set; } = null;
+        public string OriginalContentUrl { get; set; } = string.Empty;
 
-        public int Duration { get; set; } = default(int);
+        public string PreviewImageUrl { get; set; } = string.Empty;
     }
 }

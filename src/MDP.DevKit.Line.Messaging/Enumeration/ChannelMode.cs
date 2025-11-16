@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MDP.DevKit.LineMessaging
+namespace MDP.DevKit.Line.Messaging
 {
     public enum ChannelMode
     {

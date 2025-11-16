@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace MDP.DevKit.Line.Messaging
 {
-    public abstract class MessageEvent : Event
+    public abstract class Message
     {
-        // Constants
-        public const string DefaultEventType = "message";
-
-
         // Constructors
-        protected MessageEvent(string messageType) : base(DefaultEventType)
+        protected Message(string messageType)
         {
             #region Contracts
 
@@ -29,8 +25,6 @@ namespace MDP.DevKit.Line.Messaging
         // Properties
         public string MessageType { get; } = string.Empty;
 
-        public string MessageId { get; set; } = string.Empty;
-
-        public string ReplyToken { get; set; } = null;
+        public Sender? Sender { get; set; } = null;
     }
 }

@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace MDP.DevKit.Line.Messaging
 {
-    public class ImageMessageEvent : MessageEvent
+    public class TextMessage : Message
     {
         // Constants
-        public const string DefaultMessageType = "image";
+        public const string DefaultMessageType = "text";
 
 
         // Constructors
-        public ImageMessageEvent() : base(DefaultMessageType) { }
+        public TextMessage() : base(DefaultMessageType) { }
 
 
         // Properties
-        public ContentProvider ContentProvider { get; set; } = null;
+        public string Text { get; set; } = string.Empty;
     }
 }

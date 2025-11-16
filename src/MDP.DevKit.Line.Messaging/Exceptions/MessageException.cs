@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace MDP.DevKit.LineMessaging
+namespace MDP.DevKit.Line.Messaging
 {
     public class MessageException : Exception
     {
@@ -36,6 +36,9 @@ namespace MDP.DevKit.LineMessaging
         {
             // MessageBuilder
             var messageBuilder = new StringBuilder();
+
+            // Base
+            //messageBuilder.AppendLine(base.ToString() ?? string.Empty);
 
             // This
             messageBuilder.AppendLine(System.Text.Json.JsonSerializer.Serialize(new

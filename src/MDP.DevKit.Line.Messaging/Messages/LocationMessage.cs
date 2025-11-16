@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace MDP.DevKit.Line.Messaging
 {
-    public class LocationMessageEvent : MessageEvent
+    public class LocationMessage : Message
     {
         // Constants
         public const string DefaultMessageType = "location";
 
 
         // Constructors
-        public LocationMessageEvent() : base(DefaultMessageType) { }
+        public LocationMessage() : base(DefaultMessageType) { }
 
 
         // Properties

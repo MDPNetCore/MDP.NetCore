@@ -3,13 +3,15 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using MDP.Registration;
+using MDP.DevKit.Line.Messaging;
+using MDP.Network.Http;
 
-namespace MDP.DevKit.LineMessaging.Hosting
+namespace MDP.DevKit.Line.Messaging
 {
     public class MessageContextFactory: ServiceFactory<IServiceCollection, MessageContextFactory.Setting>
     {
         // Constructors
-        public MessageContextFactory() : base("MDP.DevKit.Line.Messaging") { }
+        public MessageContextFactory() : base("MDP.DevKit.Line.Messaging", null, false) { }
 
 
         // Methods
@@ -23,10 +25,23 @@ namespace MDP.DevKit.LineMessaging.Hosting
             #endregion
 
             // Domain
-            serviceCollection.TryAddSingleton<MessageContextFactory>();
+            serviceCollection.TryAddSingleton<MessageContext>();
 
             // Accesses
-            serviceCollection.TryAddTransient<HookService>(serviceProvider => { return new HookServiceProvider(setting.ChannelSecret); });
+            serviceCollection.TryAddTransient<EventService>(serviceProvider => { return new EventServiceProvider(setting.ChannelSecret); });
+            serviceCollection.TryAddTransient<MessageService, MessageServiceProvider>();
+            
+            // HttpClient
+            serviceCollection.AddHttpClient(
+                name: HttpClientDefaults.MessageClientId,
+                baseAddress: HttpClientDefaults.MessageClientUrl,
+                headers: new Dictionary<string, string>() { { "Authorization", $"Bearer {setting.ChannelAccessToken}" } }
+            );
+            serviceCollection.AddHttpClient(
+                name: HttpClientDefaults.ContentClientId,
+                baseAddress: HttpClientDefaults.ContentClientUrl,
+                headers: new Dictionary<string, string>() { { "Authorization", $"Bearer {setting.ChannelAccessToken}" } }
+            );
         }
 
 

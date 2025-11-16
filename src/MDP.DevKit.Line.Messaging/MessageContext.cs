@@ -5,33 +5,54 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MDP.DevKit.LineMessaging
+namespace MDP.DevKit.Line.Messaging
 {
-    [Service<MessageContext>(singleton: true)]
     public class MessageContext
     {
         // Fields
-        private readonly HookService _hookService;
+        private readonly EventService _eventService;
+
+        private readonly MessageService _messageService;
 
 
         // Constructors
         public MessageContext
         (
-            HookService hookService
+            EventService eventService,
+            MessageService messageService
         )
         {
             #region Contracts
 
-            ArgumentNullException.ThrowIfNull(hookService);
+            ArgumentNullException.ThrowIfNull(eventService);
+            ArgumentNullException.ThrowIfNull(messageService);
 
             #endregion
 
             // Default
-            _hookService = hookService;
+            _eventService = eventService;
+            _messageService = messageService;
         }
 
 
         // Properties
-        public HookService HookService { get { return _hookService; } }
+        public EventService EventService { get { return _eventService; } }
+
+        public MessageService MessageService { get { return _messageService; } }
+
+
+        // Methods
+        public List<Event> HandleEvent(string content, string signature)
+        {
+            #region Contracts
+
+            if (string.IsNullOrEmpty(content) == true) throw new ArgumentException($"{nameof(content)}=null");
+            if (string.IsNullOrEmpty(signature) == true) throw new ArgumentException($"{nameof(signature)}=null");
+
+            #endregion
+
+            // EventService
+            return this.EventService.Handle(content, signature);
+        }
     }
 }
